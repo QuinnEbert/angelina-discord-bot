@@ -4,12 +4,18 @@ import random
 import subprocess
 import sys
 import re
+import datetime
+import json
 
-CHANNEL_TYPE_TEXT = "<class 'discord.channel.TextChannel'>"
-DIRECT_MESSAGE = "<class 'discord.channel.DMChannel'>"
+CHANNEL_TYPE_TEXT = discord.channel.TextChannel
+DIRECT_MESSAGE = discord.channel.DMChannel
 
-OWNER_ID = PUT_YER_OWNER_ID_HERE
-MY_MENTION_PREFIX = "<@568946574143651880> "
+with open('/etc/angelina.conf', 'r') as config_file:
+  config_string = config_file.read()
+CONFIG = json.loads(config_string)
+
+OWNER_ID = int(CONFIG['owner_id'])
+MY_MENTION_PREFIX = CONFIG['my_mention_prefix']
 
 reflections = {
     "am": "are",
@@ -234,6 +240,13 @@ psychobabble = [
       "How do you feel when you say that?"]]
 ]
 
+def logprint(m):
+  f = open("Angelina.log", "a")
+  f.write(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
+  f.write(" ")
+  f.write(str(m))
+  f.write("\n")
+  f.close()
 
 def reflect(fragment):
     tokens = fragment.lower().split()
@@ -332,6 +345,19 @@ class MyClient(discord.Client):
     if message.author == self.user:
       # Stop playing with yourself!!!
       return
+    #
+    # Logging
+    #
+    if isinstance(message.channel, DIRECT_MESSAGE):
+      logprint("Direct message from "+message.author.name+": "+str(message.content))
+      #pass
+    if isinstance(message.channel, CHANNEL_TYPE_TEXT):
+      logprint("Channel message from "+message.author.name+" in "+message.guild.name+": "+message.content)
+      #pass
+    #print("--------------------------------------------------------------------------------")
+    #
+    # Command processing
+    #
     if message.content == 'ping':
       await message.channel.send('pong')
       return
@@ -384,5 +410,6 @@ class MyClient(discord.Client):
         else:
           await message.channel.send("<@"+str(message.author.id)+">, you jerk!  I don't know what you want me to do!")
       return
+logprint("I'm coming up for service!")
 client = MyClient()
-client.run('YER_OAUTH_TOKEN')
+client.run(CONFIG['bot_token'])
