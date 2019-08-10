@@ -354,8 +354,12 @@ class MyClient(discord.Client):
     if isinstance(message.channel, CHANNEL_TYPE_TEXT):
       logprint("Channel message from "+message.author.name+" in "+message.guild.name+": "+message.content)
       #pass
+    # 
+    # Special case command processing
+    # 
+    
     #
-    # Command processing
+    # General command processing
     #
     if message.content == 'ping':
       await message.channel.send('pong')
