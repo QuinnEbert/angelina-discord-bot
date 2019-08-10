@@ -354,7 +354,6 @@ class MyClient(discord.Client):
     if isinstance(message.channel, CHANNEL_TYPE_TEXT):
       logprint("Channel message from "+message.author.name+" in "+message.guild.name+": "+message.content)
       #pass
-    #print("--------------------------------------------------------------------------------")
     #
     # Command processing
     #
