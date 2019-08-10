@@ -339,8 +339,23 @@ class MyClient(discord.Client):
         if (role.name=="Admin"):
           return True
     return False
+  def get_channel(self, guild, channel_id):
+    for channel_found in guild.channels:
+      if channel_found.id == channel_id:
+        return channel_found
+    raise RuntimeError("No channel found with the specified ID in the given guild, this should never happen!")
+    sys.exit(1)
   async def send_channel_only_error(self, message):
     await message.channel.send("Sorry!  I can't do that in direct messages!  Help a squishy dragon out and ask me in a text channel?")
+  async def on_member_join(self, member):
+    ##
+    ## This isn't great, but for now, all this stuff is special case handling
+    ##
+    if member.guild.id==587137611982700546:
+      channel_to = self.get_channel(message.guild, 590043331719987200)
+      enrollment_channel = self.get_channel(message.guild, 588037825941864456).mention
+      roles_channel = self.get_channel(message.guild, 587918735201927174).mention
+      await channel_to.send("Hello, "+member.mention+"!  Please scroll to the top of the "+enrollment_channel+" and accept the rules to start chatting, you can also acquire roles in the "+roles_channel+".  We hope you enjoy your time here!")
   async def on_message(self, message):
     if message.author == self.user:
       # Stop playing with yourself!!!
@@ -357,6 +372,7 @@ class MyClient(discord.Client):
     # 
     # Special case command processing
     # 
+
     #
     # General command processing
     #
