@@ -374,7 +374,7 @@ class MyClient(discord.Client):
     # 
     if isinstance(message.channel, CHANNEL_TYPE_TEXT):
       if message.guild.id==310122761660137482:
-        admin_channel = 324258096602152961
+        admin_channel = 358208886269935616
         ignored_channels = [admin_channel]
         is_nsfw = message.channel.is_nsfw()
         ignore_channel = (message.channel.id in ignored_channels)
@@ -388,7 +388,7 @@ class MyClient(discord.Client):
           heap = "".join(message.content.lower().strip().split())
           for word in bad_words:
             word = word.lower() # just to be sure, since humans are building the word list
-            if word in message.content:
+            if word in heap:
               await notify_channel.send("Just a heads-up, in "+message.channel.mention+", I just saw "+message.author.name+" say the following, which may contain an adult language policy violation:\n\n```"+message.content+"```")
     #
     # General command processing
