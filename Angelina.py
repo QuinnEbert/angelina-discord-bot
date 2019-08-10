@@ -372,7 +372,24 @@ class MyClient(discord.Client):
     # 
     # Special case command processing
     # 
-
+    if isinstance(message.channel, CHANNEL_TYPE_TEXT):
+      if message.guild.id==310122761660137482:
+        admin_channel = 324258096602152961
+        ignored_channels = [admin_channel]
+        is_nsfw = message.channel.is_nsfw()
+        ignore_channel = (message.channel.id in ignored_channels)
+        notify_channel = self.get_channel(message.guild, admin_channel)
+        bad_words = ['shit','fuck','hell','damn','cunt','bitch','whore','titties','tits','bastard','bugger']
+        if is_nsfw:
+          ignore_channel = True
+        if message.author.id == OWNER_ID:
+          ignore_channel = False
+        if not ignore_channel:
+          heap = "".join(message.content.lower().strip().split())
+          for word in bad_words:
+            word = word.lower() # just to be sure, since humans are building the word list
+            if word in message.content:
+              await notify_channel.send("Just a heads-up, in "+message.channel.mention+", I just saw "+message.author.name+" say the following, which may contain an adult language policy violation:\n\n```"+message.content+"```")
     #
     # General command processing
     #
