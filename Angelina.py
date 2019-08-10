@@ -276,7 +276,7 @@ class MyClient(discord.Client):
       add_member_id = member.id
       valid_members.append(add_member_id)
     for channel in guild.channels:
-      if (str(type(channel))==CHANNEL_TYPE_TEXT):
+      if isinstance(channel,CHANNEL_TYPE_TEXT):
         if (channel.id==dco.id):
           destination_channel = channel
         total_channels += 1
@@ -324,11 +324,11 @@ class MyClient(discord.Client):
           welcome_message = random.choice(welcome_messages)
           await self.owner_user.send(welcome_message)
   def is_command(self, message):
-    if (str(type(message.channel))==DIRECT_MESSAGE):
+    if isinstance(message.channel,DIRECT_MESSAGE):
       return (message.content.startswith('!') or message.content.startswith('.') or message.content.startswith('#'))
     return (message.content.startswith(self.user.name+"."))
   def get_command(self, message):
-    if (str(type(message.channel))==DIRECT_MESSAGE):
+    if isinstance(message.channel,DIRECT_MESSAGE):
       return message.content[1:]
     return message.content.split('.',1)[1]
   def can_run_command(self, message, allow_others=True):
@@ -357,17 +357,17 @@ class MyClient(discord.Client):
     # 
     # Special case command processing
     # 
-    
     #
     # General command processing
     #
     if message.content == 'ping':
       await message.channel.send('pong')
       return
-    if (str(type(message.channel))==CHANNEL_TYPE_TEXT or str(type(message.channel))==DIRECT_MESSAGE):
+    if (isinstance(message.channel,CHANNEL_TYPE_TEXT) or isinstance(message.channel,DIRECT_MESSAGE)):
       if not (self.is_command(message) and self.can_run_command(message)):
-        if (message.content.startswith(MY_MENTION_PREFIX) and str(type(message.channel))==CHANNEL_TYPE_TEXT) or str(type(message.channel))==DIRECT_MESSAGE:
-          if not str(type(message.channel))==DIRECT_MESSAGE:
+        if message.content.startswith(MY_MENTION_PREFIX):
+        # the above might need an "and" re-added with the message.channel dual-type check from about 5 lines previous
+          if not isinstance(message.channel,DIRECT_MESSAGE):
             chat_msg = message.content.split(" ",1)[1].strip()
             await message.channel.send("<@"+str(message.author.id)+"> "+analyze(chat_msg))
           else:
@@ -376,7 +376,7 @@ class MyClient(discord.Client):
       else:
         command = self.get_command(message)
         if command=="stats":
-          if (str(type(message.channel))==CHANNEL_TYPE_TEXT):
+          if isinstance(message.channel,CHANNEL_TYPE_TEXT):
             await message.channel.send("I'll start gathering statistics now, this process usually takes a few minutes...")
             await self.send_stats(message.channel)
           else:
