@@ -312,7 +312,8 @@ class MyClient(discord.Client):
     stats_message = stats_message + "```"
     await destination_channel.send(stats_message)
   async def on_ready(self):
-    self.bg_loop = self.loop.create_task(self.background_ops_loop())
+    if not isinstance(self.bg_loop, asyncio.Task):
+      self.bg_loop = self.loop.create_task(self.background_ops_loop())
     sent_welcome_message = False
     for member in self.get_all_members():
       if member.id==OWNER_ID:
