@@ -6,6 +6,7 @@ import sys
 import re
 import datetime
 import json
+import asyncio
 
 CHANNEL_TYPE_TEXT = discord.channel.TextChannel
 DIRECT_MESSAGE = discord.channel.DMChannel
@@ -265,6 +266,7 @@ def analyze(statement):
 
 class MyClient(discord.Client):
   owner_user = None
+  bg_loop = None
   async def send_stats(self,dco):
     user_dict = {}
     total_messages = 0
@@ -310,6 +312,7 @@ class MyClient(discord.Client):
     stats_message = stats_message + "```"
     await destination_channel.send(stats_message)
   async def on_ready(self):
+    self.bg_loop = self.loop.create_task(self.background_ops_loop())
     sent_welcome_message = False
     for member in self.get_all_members():
       if member.id==OWNER_ID:
@@ -347,6 +350,14 @@ class MyClient(discord.Client):
     sys.exit(1)
   async def send_channel_only_error(self, message):
     await message.channel.send("Sorry!  I can't do that in direct messages!  Help a squishy dragon out and ask me in a text channel?")
+  async def background_ops_loop(self):
+    await self.wait_until_ready()
+    while not self.is_closed():
+      ##
+      ## do stuff here
+      ##
+
+      await asyncio.sleep(60) # task runs every 60 seconds
   async def on_member_join(self, member):
     ##
     ## This isn't great, but for now, all this stuff is special case handling
