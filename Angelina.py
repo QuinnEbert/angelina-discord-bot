@@ -7,6 +7,8 @@ import re
 import datetime
 import json
 import asyncio
+from bs4 import BeautifulSoup
+import requests
 
 CHANNEL_TYPE_TEXT = discord.channel.TextChannel
 DIRECT_MESSAGE = discord.channel.DMChannel
@@ -386,22 +388,37 @@ class MyClient(discord.Client):
     # 
     if isinstance(message.channel, CHANNEL_TYPE_TEXT):
       if message.guild.id==310122761660137482:
+        full_message_textbuf = message.content
+        debug_channel = self.get_channel(message.guild, 324258096602152961)
+        if len(message.embeds):
+          #await debug_channel.send(str(message.channel.id)+" / "+message.author.name+": Message content:```\n"+message.content+"```")
+          for embed in message.embeds:
+            #await debug_channel.send("Contains embed typed "+embed.type+" with description:\n"+embed.description)
+            if embed.type=="article" and embed.description:
+              full_message_textbuf = full_message_textbuf + " " + embed.description
+        for word in message.content.split(" "):
+          if len(word):
+            if word.lower().startswith("http://") or word.lower().startswith("https://"):
+              r = requests.get(word)
+              if r.headers['Content-Type'].split(';')[0].startswith("text/"):
+                full_message_textbuf = full_message_textbuf + " " + BeautifulSoup(r.text).head.find('meta', attrs={'name':'description'}).get("content")
         admin_channel = 358208886269935616
         ignored_channels = [admin_channel]
         is_nsfw = message.channel.is_nsfw()
         ignore_channel = (message.channel.id in ignored_channels)
         notify_channel = self.get_channel(message.guild, admin_channel)
-        bad_words = ['shit','fuck','hell','damn','cunt','bitch','whore','titties','tits','bastard','bugger']
+        bad_words = ['shit','slut','sph','arse','fuck','hell','damn','cunt','bitch','whore','titties','tits','bastard','bugger']
+        good_words = ['hello','othello','shitake','shittake']
         if is_nsfw:
           ignore_channel = True
         if message.author.id == OWNER_ID:
           ignore_channel = False
         if not ignore_channel:
-          heap = "".join(message.content.lower().strip().split())
+          heap = "".join(full_message_textbuf.lower().strip().split())
           for word in bad_words:
             word = word.lower() # just to be sure, since humans are building the word list
             if word in heap:
-              await notify_channel.send("Just a heads-up, in "+message.channel.mention+", I just saw "+message.author.name+" say the following, which may contain an adult language policy violation:\n\n```"+message.content+"```")
+              await notify_channel.send("Just a heads-up, in "+message.channel.mention+", I just saw "+message.author.name+" send a message with the following combined textual content, which may contain an adult language policy violation:\n\n```"+full_message_textbuf+"```")
     #
     # General command processing
     #
