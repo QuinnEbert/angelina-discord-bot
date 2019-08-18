@@ -409,12 +409,14 @@ class MyClient(discord.Client):
         notify_channel = self.get_channel(message.guild, admin_channel)
         bad_words = ['shit','slut','sph','arse','fuck','hell','damn','cunt','bitch','whore','titties','tits','bastard','bugger']
         good_words = ['hello','othello','shitake','shittake']
-        if is_nsfw:
-          ignore_channel = True
         if message.author.id == OWNER_ID:
           ignore_channel = False
+        if is_nsfw:
+          ignore_channel = True
         if not ignore_channel:
           heap = "".join(full_message_textbuf.lower().strip().split())
+          for word in good_words:
+            heap = "".join(heap.split(word))
           for word in bad_words:
             word = word.lower() # just to be sure, since humans are building the word list
             if word in heap:
