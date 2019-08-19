@@ -313,8 +313,42 @@ class MyClient(discord.Client):
         stats_message = stats_message + str(i) + ". " + user + " with " + str(user_dict[user]) + " messages\n"
     stats_message = stats_message + "```"
     await destination_channel.send(stats_message)
+  def get_all_servers(self):
+    #FIXME: rewrite this shitheap so it leverages the class comparators the parent class offers
+    gl = []
+    r = []
+    for c in self.get_all_channels():
+      if not c.guild.id in gl:
+        gl.append(c.guild.id)
+        r.append(c.guild)
+    return r
+  def get_all_server_ids(self):
+    #FIXME: rewrite this shitheap so it leverages the class comparators the parent class offers
+    gl = []
+    for c in self.get_all_channels():
+      if not c.guild.id in gl:
+        gl.append(c.guild.id)
+    return gl
+  def get_server_by_id(self, s_id):
+    #FIXME: rewrite this shitheap so it leverages the class comparators the parent class offers
+    for c in self.get_all_channels():
+      if int(c.guild.id) == int(s_id):
+        return c.guild
+    #FIXME: shitty default that will throw exceptions elsewhere, guaranteed
+    return None
+  def get_channel_by_id(self, c_id):
+    #FIXME: there's another function that does this more poorly, get rid of it!!!
+    for c in self.get_all_channels():
+      if int(c.id) == int(c_id):
+        return c
+    #FIXME: shitty default that will throw exceptions elsewhere, guaranteed
+    return None
   async def on_ready(self):
-    if not isinstance(self.bg_loop, asyncio.Task):
+    ##
+    ## general stuff
+    ##
+    bStartup = (not isinstance(self.bg_loop, asyncio.Task))
+    if bStartup:
       self.bg_loop = self.loop.create_task(self.background_ops_loop())
     sent_welcome_message = False
     for member in self.get_all_members():
@@ -329,6 +363,17 @@ class MyClient(discord.Client):
             ]
           welcome_message = random.choice(welcome_messages)
           await self.owner_user.send(welcome_message)
+    ##
+    ## server specific stuff
+    ##
+    # SqS server
+    c = self.get_channel_by_id(324258096602152961)
+    s = c.guild
+    r_mention = s.get_role(612799799116300305).mention
+    if bStartup:
+      await c.send(r_mention+" I just finished a cold start!")
+    else:
+      await c.send(r_mention+" I lost my connection, but, I have returned!")
   def is_command(self, message):
     if isinstance(message.channel,DIRECT_MESSAGE):
       return (message.content.startswith('!') or message.content.startswith('.') or message.content.startswith('#'))
