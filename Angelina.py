@@ -464,8 +464,8 @@ class MyClient(discord.Client):
             heap = "".join(heap.split(word))
           for word in bad_words:
             word = word.lower() # just to be sure, since humans are building the word list
-            if word in heap:
-              await notify_channel.send("Just a heads-up, in "+message.channel.mention+", I just saw "+message.author.name+" send a message with the following combined textual content, which may contain an adult language policy violation:\n\n```"+full_message_textbuf+"```")
+            #if word in heap:
+            #  await notify_channel.send("Just a heads-up, in "+message.channel.mention+", I just saw "+message.author.name+" send a message with the following combined textual content, which may contain an adult language policy violation:\n\n```"+full_message_textbuf+"```")
     #
     # General command processing
     #
