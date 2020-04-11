@@ -292,8 +292,8 @@ class MyClient(discord.Client):
           if not message.author.id in valid_members:
             not_including_this_user = True
           if not not_including_this_user:
-            if who_said=='Deleted User' and message.author.discriminator=='0000':
-              print(message.author.id)
+            #if who_said=='Deleted User' and message.author.discriminator=='0000':
+            #  print(message.author.id)
             who_said_final = who_said + '#' + message.author.discriminator
             if not who_said_final in user_dict:
               user_dict[who_said_final] = 1
