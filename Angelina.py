@@ -1,4 +1,4 @@
-#!/home/quinn/Applications/bin/python
+#!/usr/bin/env python3
 import discord
 import random
 import subprocess
