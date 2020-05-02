@@ -444,6 +444,8 @@ class MyClient(discord.Client):
             print("Indicated META:")
             print("  "+r.headers['Content-Type'].split(';')[0])
             if r.headers['Content-Type'].split(';')[0].startswith("text/"):
+              full_message_textbuf = message.content
+              # ^ doing this temporarily here since this is a debug throwaway
               full_message_textbuf = full_message_textbuf + " " + BeautifulSoup(r.text).head.find('meta', attrs={'name':'description'}).get("content")
       if message.guild.id==310122761660137482:
         full_message_textbuf = message.content
