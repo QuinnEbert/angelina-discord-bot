@@ -244,6 +244,8 @@ psychobabble = [
 ]
 
 def logprint(m):
+  print("logprint >>")
+  print(m)
   f = open("Angelina.log", "a")
   f.write(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
   f.write(" ")
@@ -438,10 +440,10 @@ class MyClient(discord.Client):
         if len(word):
           if word.lower().startswith("http://") or word.lower().startswith("https://"):
             r = requests.get(word)
+            print("Parsing URL: <"+str(word)+">")
+            print("Indicated META:")
+            print("  "+r.headers['Content-Type'].split(';')[0])
             if r.headers['Content-Type'].split(';')[0].startswith("text/"):
-              print("Parsing URL: <"+str(word)+">")
-              print("Indicated META:")
-              print("  "+r.headers['Content-Type'].split(';')[0])
               full_message_textbuf = full_message_textbuf + " " + BeautifulSoup(r.text).head.find('meta', attrs={'name':'description'}).get("content")
       if message.guild.id==310122761660137482:
         full_message_textbuf = message.content
