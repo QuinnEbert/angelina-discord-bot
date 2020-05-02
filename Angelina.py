@@ -244,8 +244,6 @@ psychobabble = [
 ]
 
 def logprint(m):
-  print("logprint >>")
-  print(m)
   f = open("Angelina.log", "a")
   f.write(datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
   f.write(" ")
