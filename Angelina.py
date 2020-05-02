@@ -446,6 +446,9 @@ class MyClient(discord.Client):
             if word.lower().startswith("http://") or word.lower().startswith("https://"):
               r = requests.get(word)
               if r.headers['Content-Type'].split(';')[0].startswith("text/"):
+                print("Parsing URL: <"+str(word)+">")
+                print("Indicated META:")
+                print("  "+r.headers['Content-Type'].split(';')[0])
                 full_message_textbuf = full_message_textbuf + " " + BeautifulSoup(r.text).head.find('meta', attrs={'name':'description'}).get("content")
         admin_channel = 358208886269935616
         ignored_channels = [admin_channel]
