@@ -436,19 +436,6 @@ class MyClient(discord.Client):
     # Special case command processing
     #
     if isinstance(message.channel, CHANNEL_TYPE_TEXT):
-      # Temporary debug code block, see a bit lower (comment indicates where the
-      # original travesty happened...)
-      for word in message.content.split(" "):
-        if len(word):
-          if word.lower().startswith("http://") or word.lower().startswith("https://"):
-            r = await self.get_web_content(word)
-            print("Parsing URL: <"+str(word)+">")
-            print("Indicated META:")
-            print("  "+r.headers['Content-Type'].split(';')[0])
-            if r.headers['Content-Type'].split(';')[0].startswith("text/"):
-              full_message_textbuf = message.content
-              # ^ doing this temporarily here since this is a debug throwaway
-              full_message_textbuf = full_message_textbuf + " " + BeautifulSoup(r.text).head.find('meta', attrs={'name':'description'}).get("content")
       if message.guild.id==310122761660137482:
         full_message_textbuf = message.content
         debug_channel = self.get_channel(message.guild, 324258096602152961)
@@ -465,9 +452,6 @@ class MyClient(discord.Client):
             if word.lower().startswith("http://") or word.lower().startswith("https://"):
               r = requests.get(word)
               if r.headers['Content-Type'].split(';')[0].startswith("text/"):
-                print("Parsing URL: <"+str(word)+">")
-                print("Indicated META:")
-                print("  "+r.headers['Content-Type'].split(';')[0])
                 full_message_textbuf = full_message_textbuf + " " + BeautifulSoup(r.text).head.find('meta', attrs={'name':'description'}).get("content")
         admin_channel = 358208886269935616
         ignored_channels = [admin_channel]
