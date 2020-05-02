@@ -370,10 +370,10 @@ class MyClient(discord.Client):
     c = self.get_channel_by_id(324258096602152961)
     s = c.guild
     r_mention = s.get_role(612799799116300305).mention
-    if bStartup:
-      await c.send(r_mention+" I just finished a cold start!")
-    else:
-      await c.send(r_mention+" I lost my connection, but, I have returned!")
+    #if bStartup:
+    #  await c.send(r_mention+" I just finished a cold start!")
+    #else:
+    #  await c.send(r_mention+" I lost my connection, but, I have returned!")
   def is_command(self, message):
     if isinstance(message.channel,DIRECT_MESSAGE):
       return (message.content.startswith('!') or message.content.startswith('.') or message.content.startswith('#'))
@@ -428,9 +428,9 @@ class MyClient(discord.Client):
     if isinstance(message.channel, CHANNEL_TYPE_TEXT):
       logprint("Channel message from "+message.author.name+" in "+message.guild.name+": "+message.content)
       #pass
-    # 
+    #
     # Special case command processing
-    # 
+    #
     if isinstance(message.channel, CHANNEL_TYPE_TEXT):
       if message.guild.id==310122761660137482:
         full_message_textbuf = message.content
