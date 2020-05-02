@@ -417,7 +417,7 @@ class MyClient(discord.Client):
       enrollment_channel = self.get_channel(member.guild, 588037825941864456).mention
       roles_channel = self.get_channel(member.guild, 587918735201927174).mention
       await channel_to.send("Hello, "+member.mention+"!  Please scroll to the top of the "+enrollment_channel+" channel and accept the rules to start chatting, you can also acquire roles in the "+roles_channel+" channel.  We hope you enjoy your time here!")
-  async def get_web_content(url):
+  async def get_web_content(self,url):
     return requests.get(url,timeout=(5,5))
   async def on_message(self, message):
     if message.author == self.user:
