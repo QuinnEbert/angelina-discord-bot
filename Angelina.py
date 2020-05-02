@@ -439,7 +439,7 @@ class MyClient(discord.Client):
       for word in message.content.split(" "):
         if len(word):
           if word.lower().startswith("http://") or word.lower().startswith("https://"):
-            r = requests.get(word)
+            r = requests.get(word,timeout=(5,5))
             print("Parsing URL: <"+str(word)+">")
             print("Indicated META:")
             print("  "+r.headers['Content-Type'].split(';')[0])
