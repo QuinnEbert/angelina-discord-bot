@@ -457,7 +457,9 @@ class MyClient(discord.Client):
             if word.lower().startswith("http://") or word.lower().startswith("https://"):
               r = await self.get_web_content(word)
               if r.headers['Content-Type'].split(';')[0].startswith("text/"):
-                full_message_textbuf = full_message_textbuf + " " + BeautifulSoup(r.text,features="html.parser").head.find('meta', attrs={'name':'description'}).get("content")
+                bso = BeautifulSoup(r.text,features="html.parser").head.find('meta', attrs={'name':'description'})
+                if bso is not None:
+                  full_message_textbuf = full_message_textbuf + " " + bso.get("content")
         admin_channel = 358208886269935616
         ignored_channels = [admin_channel]
         is_nsfw = message.channel.is_nsfw()
