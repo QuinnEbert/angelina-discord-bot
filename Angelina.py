@@ -266,6 +266,13 @@ def analyze(statement):
             response = random.choice(responses)
             return response.format(*[reflect(g) for g in match.groups()])
 
+def discordify_string(s):
+  if len(s) <= 1920:
+    return s
+  tmsg = "\n(truncated for maximum Discord message length)"
+  tlen = (1920-len(tmsg))
+  return s[:tlen]+tmsg
+
 class MyClient(discord.Client):
   owner_user = None
   bg_loop = None
@@ -497,12 +504,17 @@ class MyClient(discord.Client):
         elif command=="channel_only_test":
           await self.send_channel_only_error(message)
         elif command=="status":
-          v = "```"+subprocess.run(['uptime'], stdout=subprocess.PIPE).stdout.decode('utf-8')+"```"
-          w = "```"+subprocess.run(['uname','-a'], stdout=subprocess.PIPE).stdout.decode('utf-8')+"```"
-          x = "```"+subprocess.run(['free','-mt'], stdout=subprocess.PIPE).stdout.decode('utf-8')+"```"
-          y = "```"+subprocess.run(['df','-h'], stdout=subprocess.PIPE).stdout.decode('utf-8')+"```"
-          z = "```"+subprocess.run(['cat','/proc/cpuinfo'], stdout=subprocess.PIPE).stdout.decode('utf-8')+"```"
-          await message.channel.send("I've got you covered! ❤\n"+v+w+x+y+z)
+          v = subprocess.run(['uptime'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+          w = subprocess.run(['uname','-a'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+          x = subprocess.run(['free','-mt'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+          y = subprocess.run(['df','-h'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+          z = subprocess.run(['cat','/proc/cpuinfo'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+          await message.channel.send("I've got you covered! ❤\n")
+          await message.channel.send("```"+discordify_string(v)+"```")
+          await message.channel.send("```"+discordify_string(w)+"```")
+          await message.channel.send("```"+discordify_string(x)+"```")
+          await message.channel.send("```"+discordify_string(y)+"```")
+          await message.channel.send("```"+discordify_string(z)+"```")
         elif command=="shutdown" or command=="reload" or command=="reboot" or command=="restart":
           if self.can_run_command(message,allow_others=False):
             await message.channel.send("I'll be back momentarily!")
