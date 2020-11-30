@@ -374,9 +374,9 @@ class MyClient(discord.Client):
     ## server specific stuff
     ##
     # SqS server
-    c = self.get_channel_by_id(324258096602152961)
-    s = c.guild
-    r_mention = s.get_role(612799799116300305).mention
+    #c = self.get_channel_by_id(324258096602152961)
+    #s = c.guild
+    #r_mention = s.get_role(612799799116300305).mention
     #if bStartup:
     #  await c.send(r_mention+" I just finished a cold start!")
     #else:
